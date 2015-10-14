@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.ListView
 import se.hactar.movieregister.data.Movie
@@ -24,6 +25,7 @@ public class MainActivityFragment : Fragment() {
         val movies = readMovies()
         val adapter = MovieAdapter(activity, android.R.layout.simple_list_item_1, movies)
         listView.adapter = adapter
+        listView.onItemClickListener = MovieItemClickListener()
         return view;
     }
 
