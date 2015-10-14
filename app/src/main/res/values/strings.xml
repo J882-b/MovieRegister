@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Movie Register</string>
+    <string name="hello_world">Hello Movie Register!</string>
+    <string name="action_settings">Settings</string>
+</resources>
