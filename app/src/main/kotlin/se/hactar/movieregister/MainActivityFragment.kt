@@ -1,13 +1,11 @@
 package se.hactar.movieregister
 
 
-import android.support.v4.app.Fragment
+import android.app.Fragment
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
 import android.widget.ListView
 import se.hactar.movieregister.data.Movie
 import java.io.BufferedReader
@@ -50,6 +48,6 @@ public class MainActivityFragment : Fragment() {
             val movie = Movie.Factory.parse(inputLine)
             movies.add(movie)
         }
-        return movies as MutableList<Movie>
+        return movies
     }
 }

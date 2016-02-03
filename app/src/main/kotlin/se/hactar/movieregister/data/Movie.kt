@@ -7,7 +7,7 @@ public data class Movie(val index: String, val name: String, val year: String, v
     object Factory {
         fun parse(line: String) : Movie {
             val row = line.split("¤")
-            if (row.size() != 5) {
+            if (row.size != 5) {
                 throw IllegalArgumentException("Movie line could not be split into four rows.")
             }
             return Movie(row[0], row[1], row[2], row[3], row[4])
