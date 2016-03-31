@@ -4,7 +4,7 @@ import android.content.Intent
 import android.net.Uri
 import android.view.View
 import android.widget.AdapterView
-import se.hactar.movieregister.data.Movie
+import data.Movie
 
 /**
  * Created by dilbert on 2015-10-14.

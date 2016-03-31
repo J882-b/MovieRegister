@@ -6,9 +6,7 @@ import org.json.JSONObject
 import java.io.*
 import java.net.URL
 
-/**
- * Created by johan on 03/02/16.
- */
+ // TODO: Refactor to use RxAndroid
 public class PosterAsyncTask(val context: Context) : AsyncTask<String, Integer, Boolean>() {
 
     override fun doInBackground(vararg params: String?): Boolean? {

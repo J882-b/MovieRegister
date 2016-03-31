@@ -7,7 +7,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ListView
-import se.hactar.movieregister.data.Movie
+import se.hactar.movieregister.R
+import data.Movie
 import java.io.BufferedReader
 import java.io.InputStreamReader
 

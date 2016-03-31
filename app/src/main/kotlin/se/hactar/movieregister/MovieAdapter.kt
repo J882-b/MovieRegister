@@ -7,7 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.TextView
-import se.hactar.movieregister.data.Movie
+import data.Movie
 
 /**
  * Created by dilbert on 2015-10-14.
