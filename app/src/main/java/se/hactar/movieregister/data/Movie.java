@@ -3,11 +3,10 @@ package se.hactar.movieregister.data;
 public class Movie {
     //------------------------------------------------------------ class (static)
     public static Movie parse(String line) {
-        //fun parse (line:String):Movie {
-        String[] row = line.split("¤");
-        if (row.length == 4) {
-            throw new IllegalArgumentException("Movie line could not be split into four rows.");
+        if (!line.matches(".*¤.*¤.*¤.*¤.*")) {
+            throw new IllegalArgumentException("Movie line could not be split into four rows. line=" + line);
         }
+        String[] row = line.split("¤");
         return new Movie(row[0], row[1], row[2], row[3]);
     }
 
