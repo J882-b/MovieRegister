@@ -1,4 +1,4 @@
-package se.hactar.movieregister;
+package se.hactar.movieregister.movieregister;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;
