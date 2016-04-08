@@ -3,6 +3,7 @@ package se.hactar.movieregister;
 import android.content.Context;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -48,14 +49,15 @@ class MovieAdapter extends ArrayAdapter<Movie> {
             viewHolder = (ViewHolder) view.getTag();
         }
 
+        // Race between creating PosterAsyncTask and file exists.
         if (PosterHelper.getPosterFile(getItem(position).getId()).exists()) {
             File posterFile = PosterHelper.getPosterFile(getItem(position).getId());
             Log.d(TAG, "posterFile=" + posterFile.getAbsolutePath());
             viewHolder.poster.setImageBitmap(BitmapFactory.decodeFile(posterFile.getAbsolutePath()));
         } else {
-            // TODO:
+            // TODO: Change to better drawable.
             viewHolder.poster.setImageResource(R.drawable.ic_coins_l );
-            new PosterAsyncTask(getItem(position).getId()).execute();
+            new PosterAsyncTask(getItem(position).getId(), this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         }
         viewHolder.name.setText(getItem(position).getName());
         viewHolder.index.setText(getItem(position).getIndex());
