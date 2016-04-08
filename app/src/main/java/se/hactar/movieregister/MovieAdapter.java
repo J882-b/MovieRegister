@@ -20,7 +20,7 @@ import se.hactar.movieregister.util.PosterHelper;
 
 class MovieAdapter extends ArrayAdapter<Movie> {
     //------------------------------------------------------------ class (static)
-    private static final String TAG  = MovieAdapter.class.getSimpleName();
+    private static final String TAG = MovieAdapter.class.getSimpleName();
 
     //------------------------------------------------------------ object (not static)
     private final LayoutInflater mInflater;
@@ -49,15 +49,14 @@ class MovieAdapter extends ArrayAdapter<Movie> {
             viewHolder = (ViewHolder) view.getTag();
         }
 
-        // Race between creating PosterAsyncTask and file exists.
         if (PosterHelper.getPosterFile(getItem(position).getId()).exists()) {
             File posterFile = PosterHelper.getPosterFile(getItem(position).getId());
             Log.d(TAG, "posterFile=" + posterFile.getAbsolutePath());
             viewHolder.poster.setImageBitmap(BitmapFactory.decodeFile(posterFile.getAbsolutePath()));
         } else {
-            // TODO: Change to better drawable.
-            viewHolder.poster.setImageResource(R.drawable.ic_coins_l );
-            new PosterAsyncTask(getItem(position).getId(), this).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+            // TODO: Change to a better drawable.
+            viewHolder.poster.setImageResource(R.drawable.ic_coins_l);
+            PosterAsyncTask.request(getItem(position).getId(), this);
         }
         viewHolder.name.setText(getItem(position).getName());
         viewHolder.index.setText(getItem(position).getIndex());

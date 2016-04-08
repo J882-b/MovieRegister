@@ -13,17 +13,12 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 
 import se.hactar.movieregister.MovieApplication;
-import se.hactar.movieregister.PosterAsyncTask;
 
 public class PosterHelper {
     //------------------------------------------------------------ class (static)
     private static final String TAG = PosterHelper.class.getSimpleName();
-
-    private static List<String> downloading = new ArrayList<String>();
 
     private static int downloads = 0;
 
@@ -48,18 +43,6 @@ public class PosterHelper {
     }
 
     public Boolean download() {
-        if (getPosterFile(imdbId).exists()) {
-            Log.w(TAG, "Poster already downloaded, imdbId=." + imdbId);
-            return false;
-        }
-        synchronized (downloading) {
-            if (downloading.contains(imdbId)) {
-                Log.i(TAG, "Already downloading poster, imdbId=" + imdbId);
-                return false;
-            } else {
-                downloading.add(imdbId);
-            }
-        }
         InputStream jsonInputStream = null;
         InputStream posterInputStream = null;
         try {
@@ -73,10 +56,6 @@ public class PosterHelper {
             Log.e(TAG, "Problem while downloadin poster image.", e);
             return false;
         } finally {
-            synchronized (downloading) {
-                downloading.remove(imdbId);
-                Log.v(TAG, "Number of ongoing poster downloads is " + downloading.size());
-            }
             try {
                 if (jsonInputStream != null) {
                     jsonInputStream.close();
@@ -104,6 +83,7 @@ public class PosterHelper {
     }
 
     private void posterToFile(InputStream inputStream) throws IOException {
+        // TODO: Scale image to a smaller resolution if needed.
         File file = getPosterFile(imdbId);
         Log.d(TAG, "Downloading to file " + file.getAbsolutePath());
         FileOutputStream output = new FileOutputStream(file);
