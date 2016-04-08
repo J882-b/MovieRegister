@@ -54,7 +54,7 @@ public class PosterHelper {
         }
         synchronized (downloading) {
             if (downloading.contains(imdbId)) {
-                Log.i(TAG, "Already downloading, imdbId=" + imdbId);
+                Log.i(TAG, "Already downloading poster, imdbId=" + imdbId);
                 return false;
             } else {
                 downloading.add(imdbId);
@@ -64,7 +64,7 @@ public class PosterHelper {
         InputStream posterInputStream = null;
         try {
             downloads += 1;
-            Log.v(TAG, "Number of downloads started is " + downloads);
+            Log.v(TAG, "Number of poster downloads started is " + downloads);
             jsonInputStream = getJsonURL().openConnection().getInputStream();
             BufferedReader reader = new BufferedReader(new InputStreamReader(jsonInputStream, "UTF-8"));
             posterInputStream = posterUrl(reader).openConnection().getInputStream();
@@ -75,7 +75,7 @@ public class PosterHelper {
         } finally {
             synchronized (downloading) {
                 downloading.remove(imdbId);
-                Log.v(TAG, "Number of ongoing downloads is " + downloading.size());
+                Log.v(TAG, "Number of ongoing poster downloads is " + downloading.size());
             }
             try {
                 if (jsonInputStream != null) {
