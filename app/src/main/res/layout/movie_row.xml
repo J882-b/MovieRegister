@@ -6,7 +6,7 @@
 
     <ImageView
         android:id="@+id/poster"
-        android:scaleType="center"
+        android:scaleType="centerInside"
         android:layout_width="100dp"
         android:layout_height="100dp" />
 
