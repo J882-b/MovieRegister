@@ -42,6 +42,7 @@ public class PosterHelper {
         this.imdbId = imdbId;
     }
 
+    // TODO: Convert to Retrofit and RxJava
     public Boolean download() {
         InputStream jsonInputStream = null;
         InputStream posterInputStream = null;
