@@ -2,8 +2,7 @@ package se.hactar.movieregister;
 
 import android.content.Context;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
-import android.os.AsyncTask;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,26 +18,25 @@ import se.hactar.movieregister.data.Movie;
 import se.hactar.movieregister.util.PosterHelper;
 
 class MovieAdapter extends ArrayAdapter<Movie> {
-    //------------------------------------------------------------ class (static)
     private static final String TAG = MovieAdapter.class.getSimpleName();
 
-    //------------------------------------------------------------ object (not static)
-    private final LayoutInflater mInflater;
-    private final int mResource;
+    private final LayoutInflater inflater;
+    private final int resource;
 
-    public MovieAdapter(Context context, int resource, List<Movie> objects) {
-        super(context, resource, objects);
-        mInflater = LayoutInflater.from(context);
-        mResource = resource;
+    MovieAdapter(final Context context, final List<Movie> objects) {
+        super(context, android.R.layout.simple_list_item_1, objects);
+        inflater = LayoutInflater.from(context);
+        resource = android.R.layout.simple_list_item_1;
     }
 
+    @NonNull
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, final View convertView, final @NonNull ViewGroup parent) {
         View view;
         ViewHolder viewHolder;
 
         if (convertView == null) {
-            view = mInflater.inflate(R.layout.movie_row, parent, false);
+            view = inflater.inflate(R.layout.movie_row, parent, false);
             viewHolder = new ViewHolder();
             viewHolder.poster = view.findViewById(R.id.poster);
             viewHolder.name = view.findViewById(R.id.name);
@@ -49,17 +47,22 @@ class MovieAdapter extends ArrayAdapter<Movie> {
             viewHolder = (ViewHolder) view.getTag();
         }
 
-        if (PosterHelper.getPosterFile(getItem(position).getId()).exists()) {
-            File posterFile = PosterHelper.getPosterFile(getItem(position).getId());
+        Movie movie = getItem(position);
+        if (movie == null) {
+            movie = Movie.NULL_MOVIE;
+        }
+
+        if (PosterHelper.getPosterFile(movie.getId()).exists()) {
+            File posterFile = PosterHelper.getPosterFile(movie.getId());
             Log.d(TAG, "posterFile=" + posterFile.getAbsolutePath());
             viewHolder.poster.setImageBitmap(BitmapFactory.decodeFile(posterFile.getAbsolutePath()));
         } else {
             // TODO: Change to a better drawable.
-            viewHolder.poster.setImageResource(R.drawable.ic_coins_l);
-            PosterAsyncTask.request(getItem(position).getId(), this);
+            viewHolder.poster.setImageResource(R.drawable.ic_menu_block);
+            PosterAsyncTask.request(movie.getId(), this);
         }
-        viewHolder.name.setText(getItem(position).getName());
-        viewHolder.index.setText(getItem(position).getIndex());
+        viewHolder.name.setText(movie.getName());
+        viewHolder.index.setText(movie.getIndex());
         return view;
     }
 

@@ -1,20 +1,17 @@
 package se.hactar.movieregister;
 
 import android.app.Application;
-import android.content.Context;
 
 public class MovieApplication extends Application {
-    //------------------------------------------------------------ class (static)
-    private static Context context;
+    private static MovieApplication app;
 
-    public static Context getContext() {
-        return context;
+    public static MovieApplication getApp() {
+        return app;
     }
 
-    //------------------------------------------------------------ object (not static)
     @Override
     public void onCreate() {
         super.onCreate();
-        context = this;
+        app = this;
     }
 }

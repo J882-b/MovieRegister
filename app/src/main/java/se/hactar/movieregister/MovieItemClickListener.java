@@ -8,11 +8,8 @@ import android.widget.AdapterView;
 import se.hactar.movieregister.data.Movie;
 
 class MovieItemClickListener implements AdapterView.OnItemClickListener {
-    //------------------------------------------------------------ class (static)
-
-    //------------------------------------------------------------ object (not static)
     @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+    public void onItemClick(final AdapterView<?> parent, final View view, final int position, final long id) {
         Movie movie = (Movie) parent.getAdapter().getItem(position);
         if (movie.getId().length() == 0) {
             // TODO: Dialog that say IMDB ID is missing.

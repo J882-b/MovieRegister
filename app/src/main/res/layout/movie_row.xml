@@ -6,6 +6,7 @@
 
     <ImageView
         android:id="@+id/poster"
+        android:contentDescription="@string/movie_poster_image"
         android:scaleType="centerInside"
         android:layout_width="100dp"
         android:layout_height="100dp" />
@@ -14,21 +15,23 @@
         android:id="@+id/name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/poster"
-        android:paddingLeft="5dp" />
+        android:layout_toEndOf="@id/poster"
+        android:paddingStart="5dp"
+        android:paddingEnd="0dp"/>
 
     <TextView
         android:id="@+id/index_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/name"
-        android:paddingLeft="5dp"
-        android:text="#" />
+        android:layout_toEndOf="@id/name"
+        android:paddingStart="5dp"
+        android:paddingEnd="0dp"
+        android:text="@string/number_sign" />
 
     <TextView
         android:id="@+id/index"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@id/index_label" />
+        android:layout_toEndOf="@id/index_label" />
 
 </RelativeLayout>

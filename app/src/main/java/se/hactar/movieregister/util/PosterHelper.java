@@ -15,30 +15,30 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import se.hactar.movieregister.MovieApplication;
+import timber.log.Timber;
 
 public class PosterHelper {
-    //------------------------------------------------------------ class (static)
-    private static final String TAG = PosterHelper.class.getSimpleName();
-
     private static int downloads = 0;
 
-    public static File getPosterFile(String imdbId) {
+    public static File getPosterFile(final String imdbId) {
         return new File(getPosterDir(), imdbId + ".jpg");
     }
 
     private static File getPosterDir() {
-        File cacheDir = MovieApplication.getContext().getCacheDir();
+        File cacheDir = MovieApplication.getApp().getCacheDir();
         File posterDir = new File(cacheDir, "poster");
         if (!posterDir.exists()) {
-            posterDir.mkdir();
+            boolean success = posterDir.mkdir();
+            if (success) {
+                Timber.d("Created dir" + posterDir.getAbsolutePath());
+            }
         }
         return posterDir;
     }
 
-    //------------------------------------------------------------ object (not static)
-    private String imdbId;
+    private final String imdbId;
 
-    public PosterHelper(String imdbId) {
+    public PosterHelper(final String imdbId) {
         this.imdbId = imdbId;
     }
 
@@ -48,13 +48,14 @@ public class PosterHelper {
         InputStream posterInputStream = null;
         try {
             downloads += 1;
-            Log.v(TAG, "Number of poster downloads started is " + downloads);
+            Timber.v("Number of poster downloads started is " + downloads);
             jsonInputStream = getJsonURL().openConnection().getInputStream();
             BufferedReader reader = new BufferedReader(new InputStreamReader(jsonInputStream, "UTF-8"));
             posterInputStream = posterUrl(reader).openConnection().getInputStream();
             posterToFile(posterInputStream);
+            return true;
         } catch (Exception e) {
-            Log.e(TAG, "Problem while downloadin poster image.", e);
+            Timber.e("Problem while downloadin poster image.", e);
             return false;
         } finally {
             try {
@@ -62,35 +63,32 @@ public class PosterHelper {
                     jsonInputStream.close();
                 }
             } catch (IOException e) {
-                Log.e(TAG, "Problem closing jsonInputStream", e);
-                return false;
+                Timber.e("Problem closing jsonInputStream", e);
             }
             try {
                 if (posterInputStream != null) {
                     posterInputStream.close();
                 }
             } catch (IOException e) {
-                Log.e(TAG, "Problem closing posterInputStream.", e);
-                return false;
+                Timber.e("Problem closing posterInputStream.", e);
             }
         }
-        return true;
     }
 
     private URL getJsonURL() throws MalformedURLException {
         String jsonUrl = "http://www.omdbapi.com/?i=" + imdbId + "&plot=short&r=json";
-        Log.d(TAG, "jsonUrl=" + jsonUrl);
+        Timber.d("jsonUrl=" + jsonUrl);
         return new URL(jsonUrl);
     }
 
     private void posterToFile(InputStream inputStream) throws IOException {
         // TODO: Scale image to a smaller resolution if needed.
         File file = getPosterFile(imdbId);
-        Log.d(TAG, "Downloading to file " + file.getAbsolutePath());
+        Timber.d("Downloading to file " + file.getAbsolutePath());
         FileOutputStream output = new FileOutputStream(file);
         int bufferSize = 1024;
         byte[] buffer = new byte[bufferSize];
-        int len = 0;
+        int len;
         while (true) {
             len = inputStream.read(buffer);
             if (len == -1) {
@@ -101,14 +99,14 @@ public class PosterHelper {
         output.flush();
     }
 
-    private URL posterUrl(BufferedReader reader) throws JSONException, MalformedURLException {
-        StringBuffer sb = new StringBuffer();
+    private URL posterUrl(final BufferedReader reader) throws JSONException, MalformedURLException {
+        StringBuilder sb = new StringBuilder();
         while (true) {
-            String line = null;
+            String line;
             try {
                 line = reader.readLine();
             } catch (IOException e) {
-                Log.e(TAG, "Error reading line.", e);
+                Timber.e("Error reading line.", e);
                 break;
             }
             if (line == null) {
@@ -117,7 +115,7 @@ public class PosterHelper {
             sb.append(line);
         }
         String posterUrl = (String) new JSONObject(sb.toString()).get("Poster");
-        Log.d(TAG, posterUrl);
+        Timber.d(posterUrl);
         return new URL(posterUrl);
     }
 }

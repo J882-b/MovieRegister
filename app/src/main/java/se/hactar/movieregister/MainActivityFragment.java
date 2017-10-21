@@ -19,21 +19,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 import se.hactar.movieregister.data.Movie;
+import timber.log.Timber;
 
 /**
  * A placeholder fragment containing a simple view.
  */
 public class MainActivityFragment extends Fragment {
-    //------------------------------------------------------------ class (static)
-    private static final String TAG = MainActivityFragment.class.getSimpleName();
-
-    //------------------------------------------------------------ object (not static)
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_main, container, false);
         ListView listView = view.findViewById(R.id.movies);
-        ListAdapter listAdapter = new MovieAdapter(getActivity(), android.R.layout.simple_list_item_1, readMovies());
+        ListAdapter listAdapter = new MovieAdapter(getActivity(), readMovies());
         listView.setAdapter(listAdapter);
         listView.setOnItemClickListener(new MovieItemClickListener());
         return view;
@@ -46,12 +43,12 @@ public class MainActivityFragment extends Fragment {
 
         boolean first = true;
         String inputLine;
-        List<Movie> movies = new ArrayList<Movie>();
+        List<Movie> movies = new ArrayList<>();
         while (true) {
             try {
                 inputLine = reader.readLine();
             } catch (IOException e) {
-                Log.e(TAG, "Error while reading a line from file", e);
+                Timber.e("Error while reading a line from file", e);
                 break;
             }
             if (inputLine == null) {

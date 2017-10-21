@@ -1,8 +1,18 @@
 package se.hactar.movieregister.data;
 
+
+import android.support.annotation.NonNull;
+
 public class Movie {
-    //------------------------------------------------------------ class (static)
-    public static Movie parse(String line) {
+    public static final Movie NULL_MOVIE = new Movie("", "", "", "", "");
+
+    private final String index;
+    private final String name;
+    private final String year;
+    private final String type;
+    private final String id;
+
+    public static Movie parse(final String line) {
         if (!line.matches(".*¤.*¤.*¤.*¤.*")) {
             throw new IllegalArgumentException("Movie line could not be split into four rows. line=" + line);
         }
@@ -13,14 +23,7 @@ public class Movie {
         return new Movie(row[0], row[1], row[2], row[3], row[4]);
     }
 
-    //------------------------------------------------------------ object (not static)
-    private String index;
-    private String name;
-    private String year;
-    private String type;
-    private String id;
-
-    public Movie(String index, String name, String year, String type, String id) {
+    public Movie(final String index, final String name, final String year, final String type, final String id) {
         this.index = index;
         this.name = name;
         this.year = year;
@@ -28,22 +31,26 @@ public class Movie {
         this.id = id;
     }
 
+    @NonNull
     public String getIndex() {
-        return index;
+        return index == null ? "" : index;
     }
 
+    @NonNull
     public String getName() {
-        return name;
+        return name == null ? "" : name;
     }
 
+    @NonNull
     public String getType() {
-        return type;
+        return type == null ? "" : type;
     }
 
     /**
      * @return the IMDB id of this movie
      */
+    @NonNull
     public String getId() {
-        return id;
+        return id == null ? "" : id;
     }
 }
