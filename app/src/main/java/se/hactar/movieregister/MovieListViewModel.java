@@ -1,15 +1,9 @@
 package se.hactar.movieregister;
 
 
-import android.app.Fragment;
-import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ListAdapter;
-import android.widget.ListView;
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MutableLiveData;
+import android.arch.lifecycle.ViewModel;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -21,24 +15,24 @@ import java.util.List;
 import se.hactar.movieregister.data.Movie;
 import timber.log.Timber;
 
-/**
- * A placeholder fragment containing a simple view.
- */
-public class MainActivityFragment extends Fragment {
-    @Nullable
-    @Override
-    public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_main, container, false);
-        ListView listView = view.findViewById(R.id.movies);
-        ListAdapter listAdapter = new MovieAdapter(getActivity(), readMovies());
-        listView.setAdapter(listAdapter);
-        listView.setOnItemClickListener(new MovieItemClickListener());
-        return view;
+public class MovieListViewModel extends ViewModel {
+    private MutableLiveData<List<Movie>> liveDataMovies;
+
+    public LiveData<List<Movie>> getLiveDataMovies() {
+        if (liveDataMovies == null) {
+            liveDataMovies = new MutableLiveData<>();
+            loadMovies();
+        }
+        return liveDataMovies;
     }
 
+    private void loadMovies() {
+        //TODO: Async
+        liveDataMovies.setValue(readMovies());
+    }
 
     private List<Movie> readMovies() {
-        InputStream inputStream = getResources().openRawResource(R.raw.filmregister);
+        InputStream inputStream = MovieApplication.getApp().getResources().openRawResource(R.raw.filmregister);
         BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
 
         boolean first = true;

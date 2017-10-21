@@ -4,8 +4,6 @@ package se.hactar.movieregister.data;
 import android.support.annotation.NonNull;
 
 public class Movie {
-    public static final Movie NULL_MOVIE = new Movie("", "", "", "", "");
-
     private final String index;
     private final String name;
     private final String year;
@@ -23,7 +21,7 @@ public class Movie {
         return new Movie(row[0], row[1], row[2], row[3], row[4]);
     }
 
-    public Movie(final String index, final String name, final String year, final String type, final String id) {
+    private Movie(final String index, final String name, final String year, final String type, final String id) {
         this.index = index;
         this.name = name;
         this.year = year;

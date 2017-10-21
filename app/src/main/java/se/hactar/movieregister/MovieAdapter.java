@@ -1,75 +1,96 @@
 package se.hactar.movieregister;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.BitmapFactory;
-import android.support.annotation.NonNull;
-import android.util.Log;
+import android.net.Uri;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import se.hactar.movieregister.data.Movie;
 import se.hactar.movieregister.util.PosterHelper;
+import timber.log.Timber;
 
-class MovieAdapter extends ArrayAdapter<Movie> {
-    private static final String TAG = MovieAdapter.class.getSimpleName();
+class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHolder> {
+    private final List<Movie> movies = new ArrayList<>();
 
-    private final LayoutInflater inflater;
-    private final int resource;
+    private final View.OnClickListener onClickListener = view -> {
+        Movie movie = ((MovieViewHolder) view.getTag()).movie;
+        if (movie.getId().length() == 0) {
+            // TODO: Dialog that say IMDB ID is missing.
+            return;
+        }
+        openExternal(view.getContext(), movie);
+    };
 
-    MovieAdapter(final Context context, final List<Movie> objects) {
-        super(context, android.R.layout.simple_list_item_1, objects);
-        inflater = LayoutInflater.from(context);
-        resource = android.R.layout.simple_list_item_1;
+    // TODO: move to util
+    private void openExternal(final Context context, Movie movie) {
+        String url = "http://www.imdb.com/title/" + movie.getId() + "/";
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(Uri.parse(url));
+        context.startActivity(intent);
     }
 
-    @NonNull
+    public void addAll(final List<Movie> pMovies) {
+        movies.clear();
+        movies.addAll(pMovies);
+    }
+
     @Override
-    public View getView(final int position, final View convertView, final @NonNull ViewGroup parent) {
-        View view;
-        ViewHolder viewHolder;
+    public MovieViewHolder onCreateViewHolder(final ViewGroup parent, final int viewType) {
+        LayoutInflater inflater = LayoutInflater.from(parent.getContext());
+        View view = inflater.inflate(R.layout.movie_row, parent, false);
+        MovieViewHolder holder = new MovieViewHolder(view);
+        return holder;
+    }
 
-        if (convertView == null) {
-            view = inflater.inflate(R.layout.movie_row, parent, false);
-            viewHolder = new ViewHolder();
-            viewHolder.poster = view.findViewById(R.id.poster);
-            viewHolder.name = view.findViewById(R.id.name);
-            viewHolder.index = view.findViewById(R.id.index);
-            view.setTag(viewHolder);
-        } else {
-            view = convertView;
-            viewHolder = (ViewHolder) view.getTag();
-        }
+    @Override
+    public void onBindViewHolder(final MovieViewHolder holder, final int position) {
+        holder.movie = movies.get(position);
+        holder.name.setText(holder.movie.getName());
+        holder.index.setText(holder.movie.getIndex());
+        holder.view.setOnClickListener(onClickListener);
+        holder.view.setTag(holder);
 
-        Movie movie = getItem(position);
-        if (movie == null) {
-            movie = Movie.NULL_MOVIE;
-        }
-
-        if (PosterHelper.getPosterFile(movie.getId()).exists()) {
-            File posterFile = PosterHelper.getPosterFile(movie.getId());
-            Log.d(TAG, "posterFile=" + posterFile.getAbsolutePath());
-            viewHolder.poster.setImageBitmap(BitmapFactory.decodeFile(posterFile.getAbsolutePath()));
+        // TODO: Use Picasso
+        // TODO: Move to Repository
+        if (PosterHelper.getPosterFile(holder.movie.getId()).exists()) {
+            File posterFile = PosterHelper.getPosterFile(holder.movie.getId());
+            Timber.d("posterFile=" + posterFile.getAbsolutePath());
+            holder.poster.setImageBitmap(BitmapFactory.decodeFile(posterFile.getAbsolutePath()));
         } else {
             // TODO: Change to a better drawable.
-            viewHolder.poster.setImageResource(R.drawable.ic_menu_block);
-            PosterAsyncTask.request(movie.getId(), this);
+            holder.poster.setImageResource(R.drawable.ic_menu_block);
+            PosterAsyncTask.request(holder.movie.getId(), this);
         }
-        viewHolder.name.setText(movie.getName());
-        viewHolder.index.setText(movie.getIndex());
-        return view;
     }
 
-    private static class ViewHolder {
-        ImageView poster;
-        TextView name;
-        TextView index;
+    @Override
+    public int getItemCount() {
+        return movies.size();
     }
 
+    public static class MovieViewHolder extends RecyclerView.ViewHolder {
+        public Movie movie;
+        public final ImageView poster;
+        public final TextView name;
+        public final TextView index;
+        public final View view;
+
+        public MovieViewHolder(final View view) {
+            super(view);
+            poster = view.findViewById(R.id.poster);
+            name = view.findViewById(R.id.name);
+            index = view.findViewById(R.id.index);
+            this.view = view;
+        }
+    }
 }
