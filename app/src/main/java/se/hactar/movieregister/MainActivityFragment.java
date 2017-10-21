@@ -32,7 +32,7 @@ public class MainActivityFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_main, container, false);
-        ListView listView = (ListView) view.findViewById(R.id.movies);
+        ListView listView = view.findViewById(R.id.movies);
         ListAdapter listAdapter = new MovieAdapter(getActivity(), android.R.layout.simple_list_item_1, readMovies());
         listView.setAdapter(listAdapter);
         listView.setOnItemClickListener(new MovieItemClickListener());

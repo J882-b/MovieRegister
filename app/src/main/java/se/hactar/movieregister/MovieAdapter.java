@@ -40,9 +40,9 @@ class MovieAdapter extends ArrayAdapter<Movie> {
         if (convertView == null) {
             view = mInflater.inflate(R.layout.movie_row, parent, false);
             viewHolder = new ViewHolder();
-            viewHolder.poster = (ImageView) view.findViewById(R.id.poster);
-            viewHolder.name = (TextView) view.findViewById(R.id.name);
-            viewHolder.index = (TextView) view.findViewById(R.id.index);
+            viewHolder.poster = view.findViewById(R.id.poster);
+            viewHolder.name = view.findViewById(R.id.name);
+            viewHolder.index = view.findViewById(R.id.index);
             view.setTag(viewHolder);
         } else {
             view = convertView;
