@@ -2,29 +2,28 @@ package se.hactar.movieregister;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.io.File;
+import com.squareup.picasso.Picasso;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import se.hactar.movieregister.data.Movie;
-import se.hactar.movieregister.util.PosterHelper;
-import timber.log.Timber;
+import se.hactar.movieregister.db.Movie;
 
 class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHolder> {
     private final List<Movie> movies = new ArrayList<>();
 
     private final View.OnClickListener onClickListener = view -> {
         Movie movie = ((MovieViewHolder) view.getTag()).movie;
-        if (movie.getId().length() == 0) {
+        if (movie.getImdbId().length() == 0) {
             // TODO: Dialog that say IMDB ID is missing.
             return;
         }
@@ -32,24 +31,24 @@ class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHolder> {
     };
 
     // TODO: move to util
-    private void openExternal(final Context context, Movie movie) {
-        String url = "http://www.imdb.com/title/" + movie.getId() + "/";
+    private void openExternal(final Context context, final Movie movie) {
+        String url = "http://www.imdb.com/title/" + movie.getImdbId() + "/";
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setData(Uri.parse(url));
         context.startActivity(intent);
     }
 
-    public void addAll(final List<Movie> pMovies) {
-        movies.clear();
-        movies.addAll(pMovies);
+    public void addAll(final List<Movie> movies) {
+        this.movies.clear();
+        this.movies.addAll(movies);
+        notifyDataSetChanged();
     }
 
     @Override
     public MovieViewHolder onCreateViewHolder(final ViewGroup parent, final int viewType) {
         LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-        View view = inflater.inflate(R.layout.movie_row, parent, false);
-        MovieViewHolder holder = new MovieViewHolder(view);
-        return holder;
+        View view = inflater.inflate(R.layout.item_movie, parent, false);
+        return new MovieViewHolder(view);
     }
 
     @Override
@@ -60,17 +59,18 @@ class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHolder> {
         holder.view.setOnClickListener(onClickListener);
         holder.view.setTag(holder);
 
-        // TODO: Use Picasso
-        // TODO: Move to Repository
-        if (PosterHelper.getPosterFile(holder.movie.getId()).exists()) {
-            File posterFile = PosterHelper.getPosterFile(holder.movie.getId());
-            Timber.d("posterFile=" + posterFile.getAbsolutePath());
-            holder.poster.setImageBitmap(BitmapFactory.decodeFile(posterFile.getAbsolutePath()));
-        } else {
-            // TODO: Change to a better drawable.
-            holder.poster.setImageResource(R.drawable.ic_menu_block);
-            PosterAsyncTask.request(holder.movie.getId(), this);
+        holder.poster.setImageResource(R.drawable.ic_menu_block);
+
+        if (TextUtils.isEmpty(holder.movie.getPosterUrl())) {
+            //TODO: Trigger fetch of URL?
+            return;
         }
+
+        Picasso.with(holder.view.getContext())
+                .load(holder.movie.getPosterUrl())
+                .error(R.drawable.ic_menu_block)
+                .resize(100, 100)
+                .into(holder.poster);
     }
 
     @Override

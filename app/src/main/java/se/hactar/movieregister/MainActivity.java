@@ -5,11 +5,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import se.hactar.movieregister.debug.DebugLifcycleObserver;
+
 public class MainActivity extends AppCompatActivity {
     @Override
     public void onCreate(final Bundle savedInstanceState) {
+        getLifecycle().addObserver(new DebugLifcycleObserver(this));
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
     }
 
     @Override

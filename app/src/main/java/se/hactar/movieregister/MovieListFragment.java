@@ -11,21 +11,24 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import se.hactar.movieregister.debug.DebugLifcycleObserver;
+import se.hactar.movieregister.viewmodel.MovieListViewModel;
+
 /**
  * A placeholder fragment containing a simple view.
  */
 public class MovieListFragment extends Fragment {
-    private MovieListViewModel model;
 
     @Nullable
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_main, container, false);
+        getLifecycle().addObserver(new DebugLifcycleObserver(this));
+        View view = inflater.inflate(R.layout.fragment_movie_list, container, false);
         RecyclerView listView = view.findViewById(R.id.movies);
         MovieAdapter adapter = new MovieAdapter();
         listView.setAdapter(adapter);
         listView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        model = ViewModelProviders.of(getActivity()).get(MovieListViewModel.class);
+        MovieListViewModel model = ViewModelProviders.of(getActivity()).get(MovieListViewModel.class);
         model.getLiveDataMovies().observe(this, adapter::addAll);
         return view;
     }
