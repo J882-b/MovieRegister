@@ -1,11 +1,13 @@
-package se.hactar.movieregister;
+package se.hactar.movieregister.ui;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import se.hactar.movieregister.debug.DebugLifcycleObserver;
+import se.hactar.movieregister.R;
+import se.hactar.movieregister.helper.DebugLifcycleObserver;
+import se.hactar.movieregister.repository.MovieRepository;
 
 public class MainActivity extends AppCompatActivity {
     @Override
@@ -30,8 +32,8 @@ public class MainActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_import) {
+            MovieRepository.getInstance().importMovies();
             return true;
         }
 

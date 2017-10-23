@@ -1,4 +1,4 @@
-package se.hactar.movieregister;
+package se.hactar.movieregister.ui;
 
 
 import android.arch.lifecycle.ViewModelProviders;
@@ -11,25 +11,31 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import se.hactar.movieregister.debug.DebugLifcycleObserver;
+import se.hactar.movieregister.R;
+import se.hactar.movieregister.helper.DebugLifcycleObserver;
 import se.hactar.movieregister.viewmodel.MovieListViewModel;
 
-/**
- * A placeholder fragment containing a simple view.
- */
 public class MovieListFragment extends Fragment {
+
+    private RecyclerView recyclerView;
 
     @Nullable
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
         getLifecycle().addObserver(new DebugLifcycleObserver(this));
         View view = inflater.inflate(R.layout.fragment_movie_list, container, false);
-        RecyclerView listView = view.findViewById(R.id.movies);
+        recyclerView = view.findViewById(R.id.movies);
         MovieAdapter adapter = new MovieAdapter();
-        listView.setAdapter(adapter);
-        listView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         MovieListViewModel model = ViewModelProviders.of(getActivity()).get(MovieListViewModel.class);
         model.getLiveDataMovies().observe(this, adapter::addAll);
         return view;
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        recyclerView.setAdapter(null);
     }
 }

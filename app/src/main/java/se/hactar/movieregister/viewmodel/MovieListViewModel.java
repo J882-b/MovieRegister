@@ -7,22 +7,13 @@ import android.arch.lifecycle.ViewModel;
 
 import java.util.List;
 
-import se.hactar.movieregister.db.Movie;
-import se.hactar.movieregister.repository.MovieRepository;
+import se.hactar.movieregister.MovieApp;
+import se.hactar.movieregister.model.Movie;
 
 public class MovieListViewModel extends ViewModel {
     private MutableLiveData<List<Movie>> liveDataMovies;
 
     public LiveData<List<Movie>> getLiveDataMovies() {
-        if (liveDataMovies == null) {
-            liveDataMovies = new MutableLiveData<>();
-            loadMovies();
-        }
-        return liveDataMovies;
+        return MovieApp.getDb().movieDao().getAllLiveData();
     }
-
-    private void loadMovies() {
-        liveDataMovies.setValue(MovieRepository.getInstance().getMovies());
-    }
-
 }

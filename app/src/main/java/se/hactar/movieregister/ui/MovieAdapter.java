@@ -1,8 +1,5 @@
-package se.hactar.movieregister;
+package se.hactar.movieregister.ui;
 
-import android.content.Context;
-import android.content.Intent;
-import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -16,27 +13,25 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.List;
 
-import se.hactar.movieregister.db.Movie;
+import se.hactar.movieregister.R;
+import se.hactar.movieregister.helper.UiHelper;
+import se.hactar.movieregister.model.Movie;
+import timber.log.Timber;
 
 class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHolder> {
+
+    private static final int IMAGE_SIZE = 200;
+
     private final List<Movie> movies = new ArrayList<>();
 
     private final View.OnClickListener onClickListener = view -> {
         Movie movie = ((MovieViewHolder) view.getTag()).movie;
-        if (movie.getImdbId().length() == 0) {
-            // TODO: Dialog that say IMDB ID is missing.
+        if (TextUtils.isEmpty(movie.getPosterUrl())) {
+            // IMDB ID is missing.
             return;
         }
-        openExternal(view.getContext(), movie);
+        UiHelper.openExternal(view.getContext(), movie.getImdbUrl());
     };
-
-    // TODO: move to util
-    private void openExternal(final Context context, final Movie movie) {
-        String url = "http://www.imdb.com/title/" + movie.getImdbId() + "/";
-        Intent intent = new Intent(Intent.ACTION_VIEW);
-        intent.setData(Uri.parse(url));
-        context.startActivity(intent);
-    }
 
     public void addAll(final List<Movie> movies) {
         this.movies.clear();
@@ -59,18 +54,19 @@ class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHolder> {
         holder.view.setOnClickListener(onClickListener);
         holder.view.setTag(holder);
 
-        holder.poster.setImageResource(R.drawable.ic_menu_block);
+        holder.image.setImageResource(R.drawable.ic_menu_block);
 
         if (TextUtils.isEmpty(holder.movie.getPosterUrl())) {
-            //TODO: Trigger fetch of URL?
             return;
         }
 
+        Timber.d("Fetching poster for " + holder.movie.getImdbId());
         Picasso.with(holder.view.getContext())
                 .load(holder.movie.getPosterUrl())
                 .error(R.drawable.ic_menu_block)
-                .resize(100, 100)
-                .into(holder.poster);
+                .resize(IMAGE_SIZE, IMAGE_SIZE)
+                .centerInside()
+                .into(holder.image);
     }
 
     @Override
@@ -78,16 +74,26 @@ class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHolder> {
         return movies.size();
     }
 
+    @Override
+    public void onViewRecycled(final MovieViewHolder holder) {
+        cleanup(holder);
+    }
+
+    private void cleanup(final MovieViewHolder holder) {
+        Picasso.with(holder.image.getContext()).cancelRequest(holder.image);
+        holder.image.setImageDrawable(null);
+    }
+
     public static class MovieViewHolder extends RecyclerView.ViewHolder {
-        public Movie movie;
-        public final ImageView poster;
+        public final ImageView image;
         public final TextView name;
         public final TextView index;
         public final View view;
+        public Movie movie;
 
         public MovieViewHolder(final View view) {
             super(view);
-            poster = view.findViewById(R.id.poster);
+            image = view.findViewById(R.id.poster);
             name = view.findViewById(R.id.name);
             index = view.findViewById(R.id.index);
             this.view = view;

@@ -1,4 +1,4 @@
-package se.hactar.movieregister.repository;
+package se.hactar.movieregister.helper;
 
 
 import com.google.gson.Gson;

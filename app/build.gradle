@@ -46,7 +46,7 @@ dependencies {
     //implementation 'android.arch.lifecycle:reactivestreams:1.0.0-rc1'
 
     // Architecture component - Room
-    //implementation 'android.arch.persistence.room:runtime:1.0.0-rc1'
-    //annotationProcessor 'android.arch.persistence.room:compiler:1.0.0-rc1'
-    //implementation 'android.arch.persistence.room:rxjava2:1.0.0-rc1'
+    implementation 'android.arch.persistence.room:runtime:1.0.0-rc1'
+    annotationProcessor 'android.arch.persistence.room:compiler:1.0.0-rc1'
+    implementation 'android.arch.persistence.room:rxjava2:1.0.0-rc1'
 }

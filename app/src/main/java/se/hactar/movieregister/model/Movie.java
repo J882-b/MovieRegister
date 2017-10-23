@@ -1,43 +1,52 @@
-package se.hactar.movieregister.db;
+package se.hactar.movieregister.model;
 
-import timber.log.Timber;
+import android.arch.persistence.room.ColumnInfo;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.PrimaryKey;
 
+import se.hactar.movieregister.helper.imdb.ImdbHelper;
+
+@Entity(tableName = "movie")
 public class Movie {
+
+    @PrimaryKey(autoGenerate = true)
+    @ColumnInfo(name = "id")
+    private int id;
+
+    @ColumnInfo(name = "container")
     private String container;
+
+    @ColumnInfo(name = "index")
     private String index;
+
+    @ColumnInfo(name = "imdb_id")
     private String imdbId;
+
+    @ColumnInfo(name = "first_name")
     private String type;
+
+    @ColumnInfo(name = "type")
     private String name;
+
+    @ColumnInfo(name = "year")
     private String year;
+
+    @ColumnInfo(name = "poster_url")
     private String posterUrl;
 
-    public static Movie parse(final String line) {
-        // Example: Film 1¤4¤tt0372588¤DVD¤Team America: World Police¤2004
-        if (!line.matches(".*¤.*¤.*¤.*¤.*¤.*")) {
-            Timber.i("Ignoring line that does not match import pattern, line=" + line);
-        }
-        final String[] columns = line.split("¤");
-        Movie movie = new Movie();
-        movie.setContainer(get(columns, Columns.CONTAINER));
-        movie.setIndex(get(columns, Columns.INDEX));
-        movie.setImdbId(get(columns, Columns.IMDB_ID));
-        movie.setType(get(columns, Columns.TYPE));
-        movie.setName(get(columns, Columns.NAME));
-        movie.setYear(get(columns, Columns.YEAR));
-        return movie;
+    public int getId() {
+        return id;
     }
 
-    private static String get(final String[] columns, final Movie.Columns column) {
-        return column.ordinal() < columns.length ? columns[column.ordinal()] : "";
+    public void setId(int id) {
+        this.id = id;
     }
-
-    private enum Columns {CONTAINER, INDEX, IMDB_ID, TYPE, NAME, YEAR}
 
     public String getContainer() {
         return container;
     }
 
-    public void setContainer(String container) {
+    public void setContainer(final String container) {
         this.container = container;
     }
 
@@ -45,7 +54,7 @@ public class Movie {
         return index;
     }
 
-    public void setIndex(String index) {
+    public void setIndex(final String index) {
         this.index = index;
     }
 
@@ -53,7 +62,7 @@ public class Movie {
         return imdbId;
     }
 
-    public void setImdbId(String imdbId) {
+    public void setImdbId(final String imdbId) {
         this.imdbId = imdbId;
     }
 
@@ -61,7 +70,7 @@ public class Movie {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(final String type) {
         this.type = type;
     }
 
@@ -69,7 +78,7 @@ public class Movie {
         return name;
     }
 
-    public void setName(String name) {
+    public void setName(final String name) {
         this.name = name;
     }
 
@@ -77,7 +86,7 @@ public class Movie {
         return year;
     }
 
-    public void setYear(String year) {
+    public void setYear(final String year) {
         this.year = year;
     }
 
@@ -85,7 +94,7 @@ public class Movie {
         return posterUrl;
     }
 
-    public void setPosterUrl(String posterUrl) {
+    public void setPosterUrl(final String posterUrl) {
         this.posterUrl = posterUrl;
     }
 
@@ -100,5 +109,9 @@ public class Movie {
                 ", year='" + year + '\'' +
                 ", posterUrl='" + posterUrl + '\'' +
                 '}';
+    }
+
+    public String getImdbUrl() {
+        return ImdbHelper.TITLE_URL + imdbId + "/";
     }
 }

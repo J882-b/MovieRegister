@@ -1,4 +1,4 @@
-package se.hactar.movieregister.debug;
+package se.hactar.movieregister.helper;
 
 import android.arch.lifecycle.Lifecycle;
 import android.arch.lifecycle.LifecycleObserver;

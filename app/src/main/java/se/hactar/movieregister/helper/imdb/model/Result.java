@@ -1,12 +1,12 @@
-package se.hactar.movieregister.repository.dto;
+package se.hactar.movieregister.helper.imdb.model;
+
 
 import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@SuppressWarnings("unused")
-public class Result {
+public final class Result {
     @SerializedName("l")
     public String title;
 
@@ -17,13 +17,40 @@ public class Result {
     public String starring;
 
     @SerializedName("y")
-    public String year;
+    public int year;
 
     @SerializedName("q")
     public String type;
 
     @SerializedName("i")
     public final List<String> image = new ArrayList<>();
+
+    public String getTitle() {
+        return title == null ? "" : title;
+    }
+
+    public String getId() {
+        return id == null ? "" : id;
+    }
+
+    public String getStarring() {
+        return starring == null ? "" : starring;
+    }
+
+    public int getYear() {
+        return year;
+    }
+
+    public String getType() {
+        return type == null ? "" : type;
+    }
+
+    public String getImageUrl() {
+        if (!image.isEmpty()) {
+            return image.get(0);
+        }
+        return "";
+    }
 
     @Override
     public String toString() {
@@ -33,7 +60,7 @@ public class Result {
                 ", starring='" + starring + '\'' +
                 ", year=" + year +
                 ", type='" + type + '\'' +
-                ", image=" + image +
+                ", imageUrl=" + getImageUrl() +
                 '}';
     }
 }
