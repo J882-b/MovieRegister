@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
+import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,11 +61,8 @@ class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHolder> {
         }
 
         Timber.d("Fetching poster for " + holder.movie.getImdbId());
-        Picasso.with(holder.view.getContext())
+        Glide.with(holder.view.getContext())
                 .load(holder.movie.getPosterUrl())
-                .error(R.drawable.ic_menu_block)
-                .resize(IMAGE_SIZE, IMAGE_SIZE)
-                .centerInside()
                 .into(holder.image);
     }
 
@@ -80,7 +77,7 @@ class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHolder> {
     }
 
     private void cleanup(final MovieViewHolder holder) {
-        Picasso.with(holder.image.getContext()).cancelRequest(holder.image);
+        Glide.with(holder.image.getContext()).clear(holder.image);
         holder.image.setImageDrawable(null);
     }
 
