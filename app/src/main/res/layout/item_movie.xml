@@ -2,32 +2,35 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginBottom="2dp"
+    android:layout_marginTop="2dp"
     tools:context=".ui.MovieListFragment">
 
     <ImageView
         android:id="@+id/poster"
-        android:contentDescription="@string/movie_poster_image"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true"
-        android:scaleType="centerInside"
         android:layout_width="120dp"
-        android:layout_height="120dp" />
+        android:layout_height="120dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+
+        android:contentDescription="@string/movie_poster_image"
+        android:scaleType="centerInside" />
 
     <TextView
         android:id="@+id/name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_toEndOf="@id/poster"
-        android:paddingStart="5dp"
-        android:paddingEnd="0dp"/>
+        android:paddingEnd="0dp"
+        android:paddingStart="5dp" />
 
     <TextView
         android:id="@+id/index_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_toEndOf="@id/name"
-        android:paddingStart="5dp"
         android:paddingEnd="0dp"
+        android:paddingStart="5dp"
         android:text="@string/number_sign" />
 
     <TextView

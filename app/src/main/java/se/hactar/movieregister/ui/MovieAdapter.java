@@ -77,7 +77,6 @@ class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.MovieViewHolder> {
     }
 
     private void cleanup(final MovieViewHolder holder) {
-        Glide.with(holder.image.getContext()).clear(holder.image);
         holder.image.setImageDrawable(null);
     }
 
