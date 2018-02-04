@@ -76,7 +76,7 @@ object MovieRepository  {
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.io())
                 .filter { movie -> !TextUtils.isEmpty(movie.imdbId) }
-                .concatMap { movie -> imdb.getSuggest(firstLetter(movie.imdbId), movie.imdbId) }
+                .concatMap { movie -> imdb.getSuggest(firstLetter(movie.imdbId!!), movie.imdbId) }
                 .map { this.createIdUrlEntry(it) }
                 .subscribe({ this.setPosterUrlInDb(it) },  { Timber.e(it) })
     }
