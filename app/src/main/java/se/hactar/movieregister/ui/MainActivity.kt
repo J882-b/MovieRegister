@@ -30,7 +30,7 @@ class MainActivity : AppCompatActivity() {
         val id = item.itemId
 
         if (id == R.id.action_import) {
-            MovieRepository.getInstance().importMovies()
+            MovieRepository.importMovies()
             return true
         }
 
