@@ -83,7 +83,7 @@ object MovieRepository  {
 
     private fun createIdUrlEntry(suggest: Suggest): Pair<String, String> {
         val result = suggest.firstResult
-        return Pair(result.getId(), result.imageUrl)
+        return Pair(result.id!!, result.imageUrl)
     }
 
     private fun setPosterUrlInDb(pair: Pair<String, String>) {
