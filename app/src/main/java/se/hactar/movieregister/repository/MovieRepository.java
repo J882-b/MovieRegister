@@ -38,7 +38,7 @@ public class MovieRepository {
             .addCallAdapterFactory(RxJava2CallAdapterFactory.createWithScheduler(Schedulers.io()))
             .build();
     private final ImdbHelper.Api imdb = retrofit.create(ImdbHelper.Api.class);
-    private final MovieDao movieDao = MovieApp.getDb().movieDao();
+    private final MovieDao movieDao = MovieApp.db.movieDao();
 
     private MovieRepository() {
     }
@@ -56,7 +56,7 @@ public class MovieRepository {
             public void run() {
                 List<Movie> movies = new ArrayList<>();
 
-                Resources resources = MovieApp.getApp().getResources();
+                Resources resources = MovieApp.app.getResources();
                 try (InputStream inputStream = resources.openRawResource(R.raw.filmregister);
                      InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
                      BufferedReader reader = new BufferedReader(inputStreamReader)) {
@@ -66,7 +66,7 @@ public class MovieRepository {
                         try {
                             inputLine = reader.readLine();
                         } catch (IOException e) {
-                            Timber.e("Error while reading a line from file", e);
+                            Timber.e(e, "Error while reading a line from file");
                             break;
                         }
                         if (inputLine == null) {

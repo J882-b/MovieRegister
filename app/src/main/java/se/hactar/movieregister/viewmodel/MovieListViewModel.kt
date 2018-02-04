@@ -11,6 +11,6 @@ import se.hactar.movieregister.model.Movie
 class MovieListViewModel : ViewModel() {
 
     fun liveDataMovies(): LiveData<List<Movie>> {
-        return MovieApp.getDb().movieDao().allLiveData
+        return MovieApp.db.movieDao().allLiveData
     }
 }
