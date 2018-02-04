@@ -2,15 +2,7 @@ package se.hactar.movieregister.repository
 
 
 import android.text.TextUtils
-
 import com.google.gson.Gson
-
-import java.io.BufferedReader
-import java.io.IOException
-import java.io.InputStreamReader
-import java.util.AbstractMap
-import java.util.ArrayList
-
 import io.reactivex.Observable
 import io.reactivex.schedulers.Schedulers
 import retrofit2.Retrofit
@@ -23,10 +15,14 @@ import se.hactar.movieregister.helper.imdb.ImdbHelper
 import se.hactar.movieregister.helper.imdb.model.Suggest
 import se.hactar.movieregister.model.Movie
 import timber.log.Timber
+import java.io.BufferedReader
+import java.io.IOException
+import java.io.InputStreamReader
+import java.util.*
 
 object MovieRepository  {
     private val retrofit = Retrofit.Builder()
-            .baseUrl(ImdbHelper.Api.BASE_URL)
+            .baseUrl(ImdbHelper.BASE_URL)
             .addConverterFactory(GsonPConverterFactory(Gson()))
             .addCallAdapterFactory(RxJava2CallAdapterFactory.createWithScheduler(Schedulers.io()))
             .build()
@@ -76,7 +72,7 @@ object MovieRepository  {
                 .subscribeOn(Schedulers.io())
                 .observeOn(Schedulers.io())
                 .filter { movie -> !TextUtils.isEmpty(movie.imdbId) }
-                .concatMap { movie -> imdb.getSuggest(firstLetter(movie.imdbId!!), movie.imdbId) }
+                .concatMap { movie -> imdb.getSuggest(firstLetter(movie.imdbId!!), movie.imdbId!!) }
                 .map { this.createIdUrlEntry(it) }
                 .subscribe({ this.setPosterUrlInDb(it) },  { Timber.e(it) })
     }

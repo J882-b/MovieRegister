@@ -13,7 +13,6 @@ class Suggest {
 
     @SerializedName("d")
     private val results = ArrayList<Result>()
-        get() = field ?: ArrayList()
 
     val firstResult: Result
         get() = if (!results.isEmpty()) results[0] else Result()
