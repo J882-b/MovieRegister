@@ -28,7 +28,7 @@ class MovieListFragment : Fragment() {
         recyclerView!!.adapter = adapter
         recyclerView!!.layoutManager = LinearLayoutManager(activity)
         val model = ViewModelProviders.of(activity!!).get(MovieListViewModel::class.java)
-        model.liveDataMovies.observe(this, Observer<List<Movie>> { adapter.addAll(it) })
+        model.liveDataMovies.observe(this, Observer<List<Movie>> { adapter.addAll(it!!) })
         return view
     }
 
