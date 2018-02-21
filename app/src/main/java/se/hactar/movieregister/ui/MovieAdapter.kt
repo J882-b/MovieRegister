@@ -21,13 +21,14 @@ internal class MovieAdapter : RecyclerView.Adapter<MovieAdapter.MovieViewHolder>
 
     private val movies = ArrayList<Movie>()
 
-    private val onClickListener = { view:View ->
+    private val onClickListener = lambda@ { view:View ->
         val movie = (view.getTag() as MovieViewHolder).movie
         if (TextUtils.isEmpty(movie!!.posterUrl)) {
             // IMDB ID is missing.
-        } else {
-            UiHelper.openExternal(view.getContext(), movie.imdbUrl)
+            return@lambda
         }
+        UiHelper.openExternal(view.context, movie.imdbUrl)
+
     }
 
     fun addAll(movies: List<Movie>) {
