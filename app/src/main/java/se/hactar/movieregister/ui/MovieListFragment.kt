@@ -18,15 +18,15 @@ import se.hactar.movieregister.viewmodel.MovieListViewModel
 
 class MovieListFragment : Fragment() {
 
-    private var recyclerView: RecyclerView? = null
+    private lateinit var recyclerView: RecyclerView
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         lifecycle.addObserver(DebugLifcycleObserver(this))
         val view = inflater.inflate(R.layout.fragment_movie_list, container, false)
         recyclerView = view.findViewById(R.id.movies)
         val adapter = MovieAdapter()
-        recyclerView!!.adapter = adapter
-        recyclerView!!.layoutManager = LinearLayoutManager(activity)
+        recyclerView.adapter = adapter
+        recyclerView.layoutManager = LinearLayoutManager(activity)
         val model = ViewModelProviders.of(activity!!).get(MovieListViewModel::class.java)
         model.liveDataMovies().observe(this, Observer<List<Movie>> { adapter.addAll(it!!) })
         return   view
@@ -34,6 +34,6 @@ class MovieListFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
-        recyclerView!!.adapter = null
+        recyclerView.adapter = null
     }
 }

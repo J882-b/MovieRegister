@@ -13,7 +13,7 @@ object ImdbHelper {
 
     interface Api {
 
-        @GET(BASE_URL + "{firstLetter}/{search}.json")
+        @GET("$BASE_URL{firstLetter}/{search}.json")
         fun getSuggest(@Path("firstLetter") firstLetter: String,
                        @Path("search") search: String): Observable<Suggest>
     }

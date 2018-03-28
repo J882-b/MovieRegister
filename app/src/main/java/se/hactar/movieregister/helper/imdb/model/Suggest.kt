@@ -8,8 +8,9 @@ import java.util.ArrayList
 class Suggest {
 
     @SerializedName("q")
-    private val query: String? = null
-        get() = field ?: ""
+    private var _query: String? = null
+    val query: String
+        get() = _query ?: ""
 
     @SerializedName("d")
     private val results = ArrayList<Result>()

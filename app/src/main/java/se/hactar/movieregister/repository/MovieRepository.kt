@@ -1,6 +1,7 @@
 package se.hactar.movieregister.repository
 
 
+import android.os.AsyncTask
 import android.text.TextUtils
 import com.google.gson.Gson
 import io.reactivex.Observable
@@ -30,7 +31,7 @@ object MovieRepository  {
     private val movieDao = MovieApp.db.movieDao()
 
     fun importMovies() {
-        Thread(Runnable {
+        AsyncTask.THREAD_POOL_EXECUTOR.execute {
             val movies = ArrayList<Movie>()
 
             val resources = MovieApp.app.resources
@@ -64,7 +65,7 @@ object MovieRepository  {
 
             movieDao.insertAll(movies)
             downloadPosterUrls()
-        }).start()
+        }
     }
 
     private fun downloadPosterUrls() {
@@ -79,7 +80,7 @@ object MovieRepository  {
 
     private fun createIdUrlEntry(suggest: Suggest): Pair<String, String> {
         val result = suggest.firstResult
-        return Pair(result.id!!, result.imageUrl)
+        return Pair(result.id, result.imageUrl)
     }
 
     private fun setPosterUrlInDb(pair: Pair<String, String>) {

@@ -7,26 +7,30 @@ import java.util.ArrayList
 
 class Result {
     @SerializedName("l")
-    var title: String? = null
-        get() = field ?: ""
+    var _title: String? = null
+    val title: String
+        get() = _title ?: ""
 
     @SerializedName("id")
-    var id: String? = null
-        get() = field ?: ""
+    private var _id: String? = null
+    val id: String
+        get() = _id ?: ""
 
     @SerializedName("s")
-    var starring: String? = null
-        get() = field ?: ""
+    private var _starring: String? = null
+    val starring: String
+        get() = _starring ?: ""
 
     @SerializedName("y")
     var year: Int = 0
 
     @SerializedName("q")
-    var type: String? = null
-        get() = field ?: ""
+    private var _type: String? = null
+    val type: String
+        get() = _type ?: ""
 
     @SerializedName("i")
-    val image: List<String> = ArrayList()
+    private var image: List<String> = ArrayList()
 
     val imageUrl: String
         get() = if (!image.isEmpty()) image[0] else ""

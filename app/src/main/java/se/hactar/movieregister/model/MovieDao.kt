@@ -20,7 +20,7 @@ interface MovieDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAll(movies: List<Movie>)
 
-    @Query("SELECT * FROM movie WHERE imdb_id=:arg0")
+    @Query("SELECT * FROM movie WHERE imdb_id=:imdbId")
     operator fun get(imdbId: String): Movie
 
     @Update

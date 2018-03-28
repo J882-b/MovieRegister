@@ -21,9 +21,9 @@ internal class MovieAdapter : RecyclerView.Adapter<MovieAdapter.MovieViewHolder>
 
     private val movies = ArrayList<Movie>()
 
-    private val onClickListener = lambda@ { view:View ->
+    private val onClickListener = lambda@{ view:View ->
         val movie = (view.getTag() as MovieViewHolder).movie
-        if (TextUtils.isEmpty(movie!!.posterUrl)) {
+        if (TextUtils.isEmpty(movie.posterUrl)) {
             // IMDB ID is missing.
             return@lambda
         }
@@ -45,20 +45,20 @@ internal class MovieAdapter : RecyclerView.Adapter<MovieAdapter.MovieViewHolder>
 
     override fun onBindViewHolder(holder: MovieViewHolder, position: Int) {
         holder.movie = movies[position]
-        holder.name.text = holder.movie!!.name
-        holder.index.text = holder.movie!!.index
+        holder.name.text = holder.movie.name
+        holder.index.text = holder.movie.index
         holder.view.setOnClickListener(onClickListener)
         holder.view.tag = holder
 
         holder.image.setImageResource(R.drawable.ic_menu_block)
 
-        if (TextUtils.isEmpty(holder.movie!!.posterUrl)) {
+        if (TextUtils.isEmpty(holder.movie.posterUrl)) {
             return
         }
 
-        Timber.d("Fetching poster for " + holder.movie!!.imdbId)
+        Timber.d("Fetching poster for " + holder.movie.imdbId)
         Glide.with(holder.view.context)
-                .load(holder.movie!!.posterUrl)
+                .load(holder.movie.posterUrl)
                 .into(holder.image)
     }
 
@@ -66,24 +66,10 @@ internal class MovieAdapter : RecyclerView.Adapter<MovieAdapter.MovieViewHolder>
         return movies.size
     }
 
-    override fun onViewRecycled(holder: MovieViewHolder?) {
-        cleanup(holder)
-    }
-
-    private fun cleanup(holder: MovieViewHolder?) {
-        holder!!.image.setImageDrawable(null)
-    }
-
-    class MovieViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
-        val image: ImageView
-        val name: TextView
-        val index: TextView
-        var movie: Movie? = null
-
-        init {
-            image = view.findViewById(R.id.poster)
-            name = view.findViewById(R.id.name)
-            index = view.findViewById(R.id.index)
-        }
-    }
+     class MovieViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
+         val image: ImageView = view.findViewById(R.id.poster)
+         val name: TextView = view.findViewById(R.id.name)
+         val index: TextView = view.findViewById(R.id.index)
+         lateinit var movie: Movie
+     }
 }
