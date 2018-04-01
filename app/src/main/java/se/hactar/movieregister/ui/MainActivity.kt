@@ -1,10 +1,11 @@
 package se.hactar.movieregister.ui
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
-
 import se.hactar.movieregister.R
 import se.hactar.movieregister.helper.DebugLifcycleObserver
 import se.hactar.movieregister.repository.MovieRepository
@@ -29,8 +30,8 @@ class MainActivity : AppCompatActivity() {
         // as you specify a parent activity in AndroidManifest.xml.
         val id = item.itemId
 
-        if (id == R.id.action_import) {
-            MovieRepository.importMovies()
+        if (id == R.id.action_clear) {
+            MovieRepository.clearMovies();
             return true
         }
 

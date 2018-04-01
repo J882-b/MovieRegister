@@ -9,7 +9,6 @@ import io.reactivex.schedulers.Schedulers
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import se.hactar.movieregister.MovieApp
-import se.hactar.movieregister.R
 import se.hactar.movieregister.helper.GsonPConverterFactory
 import se.hactar.movieregister.helper.ImportMovie
 import se.hactar.movieregister.helper.imdb.ImdbHelper
@@ -18,6 +17,7 @@ import se.hactar.movieregister.model.Movie
 import timber.log.Timber
 import java.io.BufferedReader
 import java.io.IOException
+import java.io.InputStream
 import java.io.InputStreamReader
 import java.util.*
 
@@ -30,32 +30,40 @@ object MovieRepository  {
     private val imdb = retrofit.create(ImdbHelper.Api::class.java)
     private val movieDao = MovieApp.db.movieDao()
 
-    fun importMovies() {
+    fun importMovies(inputStream: InputStream) {
         AsyncTask.THREAD_POOL_EXECUTOR.execute {
             val movies = ArrayList<Movie>()
 
-            val resources = MovieApp.app.resources
             try {
-                resources.openRawResource(R.raw.filmregister).use { inputStream ->
-                    InputStreamReader(inputStream).use { inputStreamReader ->
-                        BufferedReader(inputStreamReader).use { reader ->
+                InputStreamReader(inputStream).use { inputStreamReader ->
+                    BufferedReader(inputStreamReader).use { reader ->
 
-                            var inputLine: String?
-                            while (true) {
-                                try {
-                                    inputLine = reader.readLine()
-                                } catch (e: IOException) {
-                                    Timber.e(e, "Error while reading a line from file")
-                                    break
-                                }
-
-                                if (inputLine == null) {
-                                    // Exit loop if no lines left
-                                    break
-                                }
-                                val movie = ImportMovie.parse(inputLine)
-                                movies.add(movie)
+                        var first = true
+                        var inputLine: String?
+                        while (true) {
+                            try {
+                                inputLine = reader.readLine()
+                            } catch (e: IOException) {
+                                Timber.e(e, "Error while reading a line from file")
+                                break
                             }
+
+                            if (inputLine == null) {
+                                // Exit loop if no lines left
+                                break
+                            }
+
+                            if (first) {
+                                first = false
+                                // Check HMR signature to know if this is a Movie Register file
+                                if (!inputLine.equals("HMRHMRHMRHMRHMR")) {
+                                    break;
+                                }
+                                continue;
+                            }
+
+                            val movie = ImportMovie.parse(inputLine)
+                            movies.add(movie)
                         }
                     }
                 }
@@ -91,5 +99,11 @@ object MovieRepository  {
 
     private fun firstLetter(string: String): String {
         return string.substring(0, 1)
+    }
+
+    fun clearMovies() {
+        AsyncTask.THREAD_POOL_EXECUTOR.execute {
+            movieDao.deleteAll()
+        }
     }
 }
