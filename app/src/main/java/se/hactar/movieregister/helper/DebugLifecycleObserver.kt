@@ -7,7 +7,7 @@ import android.arch.lifecycle.OnLifecycleEvent
 
 import timber.log.Timber
 
-class DebugLifcycleObserver(lifecycleOwner: LifecycleOwner) : LifecycleObserver {
+class DebugLifecycleObserver(lifecycleOwner: LifecycleOwner) : LifecycleObserver {
 
     private val tag: String = "<" + lifecycleOwner.javaClass.simpleName + "> "
 

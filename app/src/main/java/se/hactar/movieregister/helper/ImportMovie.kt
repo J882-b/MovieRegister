@@ -8,7 +8,7 @@ object ImportMovie {
     fun parse(line: String): Movie {
         // Example: Film 1¤4¤tt0372588¤DVD¤Team America: World Police¤2004
         if (!line.matches(".*¤.*¤.*¤.*¤.*¤.*".toRegex())) {
-            Timber.i("Ignoring line that does not match import pattern, line=" + line)
+            Timber.i("Ignoring line that does not match import pattern, line=$line")
         }
         val columns = line.split("¤".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
         val movie = Movie()
@@ -21,7 +21,7 @@ object ImportMovie {
         return movie
     }
 
-    private operator fun get(columns: Array<String>, column: ImportMovie.Columns): String {
+    private operator fun get(columns: Array<String>, column: Columns): String {
         return if (column.ordinal < columns.size) columns[column.ordinal] else ""
     }
 

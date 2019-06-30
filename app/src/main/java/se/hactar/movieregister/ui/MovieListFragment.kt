@@ -12,7 +12,7 @@ import android.view.View
 import android.view.ViewGroup
 
 import se.hactar.movieregister.R
-import se.hactar.movieregister.helper.DebugLifcycleObserver
+import se.hactar.movieregister.helper.DebugLifecycleObserver
 import se.hactar.movieregister.model.Movie
 import se.hactar.movieregister.viewmodel.MovieListViewModel
 
@@ -21,7 +21,7 @@ class MovieListFragment : Fragment() {
     private lateinit var recyclerView: RecyclerView
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        lifecycle.addObserver(DebugLifcycleObserver(this))
+        lifecycle.addObserver(DebugLifecycleObserver(this))
         val view = inflater.inflate(R.layout.fragment_movie_list, container, false)
         recyclerView = view.findViewById(R.id.movies)
         val adapter = MovieAdapter()

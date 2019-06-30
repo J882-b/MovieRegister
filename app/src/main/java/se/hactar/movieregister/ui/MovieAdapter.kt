@@ -31,9 +31,9 @@ internal class MovieAdapter : RecyclerView.Adapter<MovieAdapter.MovieViewHolder>
 
     }
 
-    fun addAll(movies: List<Movie>) {
-        this.movies.clear()
-        this.movies.addAll(movies)
+    fun addAll(_movies: List<Movie>) {
+        movies.clear()
+        movies.addAll(_movies)
         notifyDataSetChanged()
     }
 
