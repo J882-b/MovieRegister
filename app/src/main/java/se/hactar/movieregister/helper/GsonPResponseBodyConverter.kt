@@ -2,13 +2,9 @@ package se.hactar.movieregister.helper
 
 import com.google.gson.Gson
 import com.google.gson.TypeAdapter
-import com.google.gson.stream.JsonReader
-
-import java.io.IOException
-import java.io.Reader
-
 import okhttp3.ResponseBody
 import retrofit2.Converter
+import java.io.IOException
 
 
 class GsonPResponseBodyConverter<T> internal constructor(private val gson: Gson, private val adapter: TypeAdapter<T>) : Converter<ResponseBody, T> {

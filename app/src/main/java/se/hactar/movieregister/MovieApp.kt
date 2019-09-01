@@ -1,7 +1,7 @@
 package se.hactar.movieregister
 
 import android.app.Application
-import android.arch.persistence.room.Room
+import androidx.room.Room
 
 import se.hactar.movieregister.model.MovieDatabase
 import timber.log.Timber

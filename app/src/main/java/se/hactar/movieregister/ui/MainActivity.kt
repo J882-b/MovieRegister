@@ -1,9 +1,9 @@
 package se.hactar.movieregister.ui
 
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
+import androidx.appcompat.app.AppCompatActivity
 import se.hactar.movieregister.R
 import se.hactar.movieregister.helper.DebugLifecycleObserver
 import se.hactar.movieregister.repository.MovieRepository
