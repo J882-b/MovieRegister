@@ -10,15 +10,14 @@ class MovieApp : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        app = this
-        db = Room.databaseBuilder(this, MovieDatabase::class.java, "movie_db").build()
+        database = Room.databaseBuilder(this, MovieDatabase::class.java, "movie_db").build()
 
         // TODO: disable logging for release build
         Timber.plant(Timber.DebugTree())
     }
 
     companion object {
-        lateinit var app: MovieApp
-        lateinit var db: MovieDatabase
+        lateinit var database: MovieDatabase
+            private set
     }
 }

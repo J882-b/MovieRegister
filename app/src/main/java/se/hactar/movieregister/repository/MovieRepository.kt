@@ -27,7 +27,7 @@ object MovieRepository  {
             .addCallAdapterFactory(RxJava2CallAdapterFactory.createWithScheduler(Schedulers.io()))
             .build()
     private val imdb = retrofit.create(ImdbHelper.Api::class.java)
-    private val movieDao = MovieApp.db.movieDao()
+    private val movieDao = MovieApp.database.movieDao()
 
     fun importMovies(inputStream: InputStream) {
         AsyncTask.THREAD_POOL_EXECUTOR.execute {
@@ -56,12 +56,13 @@ object MovieRepository  {
                                 first = false
                                 // Check HMR signature to know if this is a Movie Register file
                                 if (!inputLine.equals("HMRHMRHMRHMRHMR")) {
-                                    break;
+                                    break
                                 }
-                                continue;
+                                continue
                             }
 
                             val movie = ImportMovie.parse(inputLine)
+                            Timber.d("Adding movie: $movie")
                             movies.add(movie)
                         }
                     }
@@ -91,8 +92,11 @@ object MovieRepository  {
     }
 
     private fun setPosterUrlInDb(pair: Pair<String, String>) {
-        val movie = movieDao.get(pair.first)
-        movie.posterUrl = pair.second
+        val imdbId = pair.first
+        val posterUrl = pair.second
+        val movie = movieDao.get(imdbId)
+        Timber.d("Setting poster url: $posterUrl for $imdbId")
+        movie.posterUrl = posterUrl
         movieDao.update(movie)
     }
 

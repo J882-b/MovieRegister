@@ -7,11 +7,7 @@ import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-
 import com.bumptech.glide.Glide
-
-import java.util.ArrayList
-
 import se.hactar.movieregister.R
 import se.hactar.movieregister.helper.UiHelper
 import se.hactar.movieregister.model.Movie
@@ -21,14 +17,13 @@ internal class MovieAdapter : RecyclerView.Adapter<MovieAdapter.MovieViewHolder>
 
     private val movies = ArrayList<Movie>()
 
-    private val onClickListener = lambda@{ view:View ->
-        val movie = (view.getTag() as MovieViewHolder).movie
+    private val onClickListener = lambda@{ view: View ->
+        val movie = (view.tag as MovieViewHolder).movie
         if (TextUtils.isEmpty(movie.posterUrl)) {
             // IMDB ID is missing.
             return@lambda
         }
         UiHelper.openExternal(view.context, movie.imdbUrl)
-
     }
 
     fun addAll(_movies: List<Movie>) {
@@ -66,10 +61,10 @@ internal class MovieAdapter : RecyclerView.Adapter<MovieAdapter.MovieViewHolder>
         return movies.size
     }
 
-     class MovieViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
-         val image: ImageView = view.findViewById(R.id.poster)
-         val name: TextView = view.findViewById(R.id.name)
-         val index: TextView = view.findViewById(R.id.index)
-         lateinit var movie: Movie
-     }
+    class MovieViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
+        val image: ImageView = view.findViewById(R.id.poster)
+        val name: TextView = view.findViewById(R.id.name)
+        val index: TextView = view.findViewById(R.id.index)
+        lateinit var movie: Movie
+    }
 }
