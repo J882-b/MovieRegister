@@ -28,7 +28,7 @@ class MainActivity : AppCompatActivity() {
         val id = item.itemId
 
         if (id == R.id.action_clear) {
-            MovieRepository.clearMovies();
+            MovieRepository.clearMovies()
             return true
         }
 

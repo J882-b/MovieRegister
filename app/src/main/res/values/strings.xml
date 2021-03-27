@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">Movie Register</string>
-    <string name="action_import">Import</string>
     <string name="movie_poster_image">Movie poster image.</string>
     <string name="number_sign">#</string>
     <string name="action_clear">Clear</string>

@@ -1,18 +1,14 @@
 package se.hactar.movieregister.repository
 
 
-import android.os.AsyncTask
-import android.text.TextUtils
 import com.google.gson.Gson
-import io.reactivex.Observable
-import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import retrofit2.Retrofit
-import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import se.hactar.movieregister.MovieApp
 import se.hactar.movieregister.helper.GsonPConverterFactory
 import se.hactar.movieregister.helper.ImportMovie
 import se.hactar.movieregister.helper.imdb.ImdbHelper
-import se.hactar.movieregister.helper.imdb.model.Suggest
 import se.hactar.movieregister.model.Movie
 import timber.log.Timber
 import java.io.BufferedReader
@@ -20,17 +16,16 @@ import java.io.IOException
 import java.io.InputStream
 import java.io.InputStreamReader
 
-object MovieRepository  {
+object MovieRepository {
     private val retrofit = Retrofit.Builder()
             .baseUrl(ImdbHelper.BASE_URL)
             .addConverterFactory(GsonPConverterFactory(Gson()))
-            .addCallAdapterFactory(RxJava2CallAdapterFactory.createWithScheduler(Schedulers.io()))
             .build()
     private val imdb = retrofit.create(ImdbHelper.Api::class.java)
     private val movieDao = MovieApp.database.movieDao()
 
     fun importMovies(inputStream: InputStream) {
-        AsyncTask.THREAD_POOL_EXECUTOR.execute {
+        GlobalScope.launch {
             val movies = ArrayList<Movie>()
 
             try {
@@ -55,7 +50,7 @@ object MovieRepository  {
                             if (first) {
                                 first = false
                                 // Check HMR signature to know if this is a Movie Register file
-                                if (!inputLine.equals("HMRHMRHMRHMRHMR")) {
+                                if (inputLine != "HMRHMRHMRHMRHMR") {
                                     break
                                 }
                                 continue
@@ -68,7 +63,7 @@ object MovieRepository  {
                     }
                 }
             } catch (e: IOException) {
-                Timber.e("Prolem importing movies from file.")
+                Timber.e("Problem importing movies from file.")
             }
 
             movieDao.insertAll(movies)
@@ -76,25 +71,23 @@ object MovieRepository  {
         }
     }
 
-    private fun downloadPosterUrls() {
-        Observable.fromIterable(movieDao.all)
-                .subscribeOn(Schedulers.io())
-                .observeOn(Schedulers.io())
-                .filter { movie -> !TextUtils.isEmpty(movie.imdbId) }
-                .concatMap { movie -> imdb.getSuggest(firstLetter(movie.imdbId!!), movie.imdbId!!) }
-                .map { this.createIdUrlEntry(it) }
-                .subscribe({ this.setPosterUrlInDb(it) },  { Timber.e(it) })
+    private suspend fun downloadPosterUrls() {
+        Timber.i("Downloading poster urls")
+        val imdbIds = movieDao.all
+                .filterNot { it.imdbId.isNullOrEmpty() }
+                .map { it.imdbId }
+
+        imdbIds.forEach {
+            val suggest = imdb.getSuggest(firstLetter(it!!), it)
+            Timber.d( "Response to get image url: $suggest")
+            val result = suggest.results.first()
+            setPosterUrlInDb(result.id!!, result.images.first())
+        }
+        Timber.i("Downloading poster urls done.")
     }
 
-    private fun createIdUrlEntry(suggest: Suggest): Pair<String, String> {
-        val result = suggest.firstResult
-        return Pair(result.id, result.imageUrl)
-    }
-
-    private fun setPosterUrlInDb(pair: Pair<String, String>) {
-        val imdbId = pair.first
-        val posterUrl = pair.second
-        val movie = movieDao.get(imdbId)
+    private fun setPosterUrlInDb(imdbId: String, posterUrl: String) {
+        val movie = movieDao[imdbId]
         Timber.d("Setting poster url: $posterUrl for $imdbId")
         movie.posterUrl = posterUrl
         movieDao.update(movie)
@@ -105,7 +98,7 @@ object MovieRepository  {
     }
 
     fun clearMovies() {
-        AsyncTask.THREAD_POOL_EXECUTOR.execute {
+        GlobalScope.launch {
             movieDao.deleteAll()
         }
     }

@@ -22,7 +22,7 @@ class ImportActivity : AppCompatActivity() {
             val uri = intent.data
             val name = uri?.lastPathSegment
 
-            Timber.v(tag + "File intent detected: " + action + " : " + intent.dataString + " : " + intent.type + " : " + name)
+            Timber.v("$tag File intent detected: $action : ${intent.dataString} : ${intent.type} : $name")
 
             val input = resolver.openInputStream(uri!!)
             MovieRepository.importMovies(input!!)

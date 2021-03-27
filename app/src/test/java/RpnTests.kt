@@ -10,7 +10,7 @@ class RpnTests {
       Assert.assertEquals("Summa: ", 13255.0, "245 2 x 4 / 88 x".rpn() + "110 4 / 5 x 72 4 / x".rpn(), 0.1)
     }
 
-    fun String.rpn(): Double {
+    private fun String.rpn(): Double {
         val stack = Stack<Double>()
         this.split(' ').forEach{word ->
             when(word) {

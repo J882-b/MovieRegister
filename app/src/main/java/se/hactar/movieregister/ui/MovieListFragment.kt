@@ -6,14 +6,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-
 import se.hactar.movieregister.R
 import se.hactar.movieregister.helper.DebugLifecycleObserver
-import se.hactar.movieregister.model.Movie
 import se.hactar.movieregister.viewmodel.MovieListViewModel
 
 class MovieListFragment : Fragment() {
@@ -27,8 +24,8 @@ class MovieListFragment : Fragment() {
         val adapter = MovieAdapter()
         recyclerView.adapter = adapter
         recyclerView.layoutManager = LinearLayoutManager(activity)
-        val model = ViewModelProviders.of(activity!!).get(MovieListViewModel::class.java)
-        model.liveDataMovies().observe(this, Observer<List<Movie>> { adapter.addAll(it!!) })
+        val model = ViewModelProvider(requireActivity()).get(MovieListViewModel::class.java)
+        model.liveDataMovies().observe(viewLifecycleOwner, { adapter.addAll(it!!) })
         return   view
     }
 

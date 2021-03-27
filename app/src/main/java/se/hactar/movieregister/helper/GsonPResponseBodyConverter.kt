@@ -16,11 +16,8 @@ class GsonPResponseBodyConverter<T> internal constructor(private val gson: Gson,
         while (item != '('.toInt() && item != -1) {
             item = reader.read()
         }
-        val jsonReader = gson.newJsonReader(reader)
-        try {
-            return adapter.read(jsonReader)
-        } finally {
-            reader.close()
+        gson.newJsonReader(reader).use {
+            return adapter.read(it)
         }
     }
 }

@@ -51,7 +51,7 @@ internal class MovieAdapter : RecyclerView.Adapter<MovieAdapter.MovieViewHolder>
             return
         }
 
-        Timber.d("Fetching poster for " + holder.movie.imdbId)
+        Timber.d("Fetching poster for ${holder.movie.imdbId}")
         Glide.with(holder.view.context)
                 .load(holder.movie.posterUrl)
                 .into(holder.image)
