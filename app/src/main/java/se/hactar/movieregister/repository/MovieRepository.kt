@@ -3,6 +3,9 @@ package se.hactar.movieregister.repository
 
 import com.google.gson.Gson
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import retrofit2.Retrofit
 import se.hactar.movieregister.MovieApp
@@ -72,18 +75,13 @@ object MovieRepository {
     }
 
     private suspend fun downloadPosterUrls() {
-        Timber.i("Downloading poster urls")
-        val imdbIds = movieDao.all
+        movieDao.all
                 .filterNot { it.imdbId.isNullOrEmpty() }
                 .map { it.imdbId }
-
-        imdbIds.forEach {
-            val suggest = imdb.getSuggest(firstLetter(it!!), it)
-            Timber.d( "Response to get image url: $suggest")
-            val result = suggest.results.first()
-            setPosterUrlInDb(result.id!!, result.images.first())
-        }
-        Timber.i("Downloading poster urls done.")
+                .asFlow()
+                .map { imdb.getSuggest(firstLetter(it!!), it) }
+                .map { it.results.first() }
+                .collect { setPosterUrlInDb(it.id!!, it.images.first()) }
     }
 
     private fun setPosterUrlInDb(imdbId: String, posterUrl: String) {
