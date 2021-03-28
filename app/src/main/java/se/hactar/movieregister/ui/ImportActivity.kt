@@ -17,14 +17,12 @@ class ImportActivity : AppCompatActivity() {
         val action = intent.action
 
         if (action == Intent.ACTION_VIEW) {
-            val resolver = contentResolver
-
             val uri = intent.data
             val name = uri?.lastPathSegment
 
             Timber.v("$tag File intent detected: $action : ${intent.dataString} : ${intent.type} : $name")
 
-            val input = resolver.openInputStream(uri!!)
+            val input = contentResolver.openInputStream(uri!!)
             MovieRepository.importMovies(input!!)
         }
 
@@ -37,5 +35,4 @@ class ImportActivity : AppCompatActivity() {
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_SINGLE_TOP
         startActivity(intent)
     }
-
 }

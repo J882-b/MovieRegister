@@ -12,14 +12,11 @@ import se.hactar.movieregister.MovieApp
 import se.hactar.movieregister.helper.GsonPConverterFactory
 import se.hactar.movieregister.helper.ImportMovie
 import se.hactar.movieregister.helper.imdb.ImdbHelper
-import se.hactar.movieregister.model.Movie
 import timber.log.Timber
-import java.io.BufferedReader
-import java.io.IOException
 import java.io.InputStream
-import java.io.InputStreamReader
 
 object MovieRepository {
+    private const val FIRST_LINE_PATTERN = "HMRHMRHMRHMRHMR"
     private val retrofit = Retrofit.Builder()
             .baseUrl(ImdbHelper.BASE_URL)
             .addConverterFactory(GsonPConverterFactory(Gson()))
@@ -29,45 +26,13 @@ object MovieRepository {
 
     fun importMovies(inputStream: InputStream) {
         GlobalScope.launch {
-            val movies = ArrayList<Movie>()
 
-            try {
-                InputStreamReader(inputStream).use { inputStreamReader ->
-                    BufferedReader(inputStreamReader).use { reader ->
-
-                        var first = true
-                        var inputLine: String?
-                        while (true) {
-                            try {
-                                inputLine = reader.readLine()
-                            } catch (e: IOException) {
-                                Timber.e(e, "Error while reading a line from file")
-                                break
-                            }
-
-                            if (inputLine == null) {
-                                // Exit loop if no lines left
-                                break
-                            }
-
-                            if (first) {
-                                first = false
-                                // Check HMR signature to know if this is a Movie Register file
-                                if (inputLine != "HMRHMRHMRHMRHMR") {
-                                    break
-                                }
-                                continue
-                            }
-
-                            val movie = ImportMovie.parse(inputLine)
-                            Timber.d("Adding movie: $movie")
-                            movies.add(movie)
-                        }
-                    }
-                }
-            } catch (e: IOException) {
-                Timber.e("Problem importing movies from file.")
-            }
+            val movies = inputStream.bufferedReader()
+                    .lineSequence()
+                    .dropWhile { it == FIRST_LINE_PATTERN } // TODO: Verify first line
+                    .map { ImportMovie.parse(it) }
+                    .onEach { Timber.d("Parsed movie: $it") }
+                    .toList()
 
             movieDao.insertAll(movies)
             downloadPosterUrls()
