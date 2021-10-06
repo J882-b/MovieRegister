@@ -6,11 +6,11 @@ import timber.log.Timber
 object ImportMovie {
 
     fun parse(line: String): Movie {
-        // Example: Film 1¤4¤tt0372588¤DVD¤Team America: World Police¤2004
-        if (!line.matches(".*¤.*¤.*¤.*¤.*¤.*".toRegex())) {
+        // Example: A|1|tt0107048|DVD|Groundhog Day|1993
+        if (!line.matches(".*\\.*\\|.*\\|.*\\|.*\\|.*".toRegex())) {
             Timber.i("Ignoring line that does not match import pattern, line=$line")
         }
-        val columns = line.split("¤".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
+        val columns = line.split("\\|".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
         val movie = Movie()
         movie.container = get(columns, Columns.CONTAINER)
         movie.index = get(columns, Columns.INDEX)

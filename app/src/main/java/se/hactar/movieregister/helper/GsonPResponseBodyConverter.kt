@@ -13,7 +13,7 @@ class GsonPResponseBodyConverter<T> internal constructor(private val gson: Gson,
     override fun convert(value: ResponseBody): T {
         val reader = value.charStream()
         var item = reader.read()
-        while (item != '('.toInt() && item != -1) {
+        while (item != '('.code && item != -1) {
             item = reader.read()
         }
         gson.newJsonReader(reader).use {

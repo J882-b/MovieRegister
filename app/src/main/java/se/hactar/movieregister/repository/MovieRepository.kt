@@ -29,7 +29,8 @@ object MovieRepository {
 
             val movies = inputStream.bufferedReader()
                     .lineSequence()
-                    .dropWhile { it == FIRST_LINE_PATTERN } // TODO: Verify first line
+                    // TODO: Verify first line
+                    .dropWhile { it == FIRST_LINE_PATTERN }
                     .map { ImportMovie.parse(it) }
                     .onEach { Timber.d("Parsed movie: $it") }
                     .toList()
