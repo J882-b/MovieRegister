@@ -30,7 +30,6 @@ class MovieAdapter : RecyclerView.Adapter<MovieViewHolder>() {
         movies.clear()
         movies.addAll(_movies)
         notifyDataSetChanged()
-        noti
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieViewHolder {
