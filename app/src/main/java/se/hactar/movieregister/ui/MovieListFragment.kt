@@ -10,7 +10,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import se.hactar.movieregister.R
-import se.hactar.movieregister.helper.DebugLifecycleObserver
 import se.hactar.movieregister.viewmodel.MovieListViewModel
 
 class MovieListFragment : Fragment() {
@@ -18,7 +17,6 @@ class MovieListFragment : Fragment() {
     private lateinit var recyclerView: RecyclerView
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        lifecycle.addObserver(DebugLifecycleObserver(this))
         val view = inflater.inflate(R.layout.fragment_movie_list, container, false)
         recyclerView = view.findViewById(R.id.movies)
         val adapter = MovieAdapter()

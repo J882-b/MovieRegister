@@ -1,23 +1,26 @@
 package se.hactar.movieregister.helper
 
+import android.util.Log
 import se.hactar.movieregister.model.Movie
-import timber.log.Timber
 
 object ImportMovie {
+
+    private val TAG = ImportMovie::class.java.simpleName
 
     fun parse(line: String): Movie {
         // Example: A|1|tt0107048|DVD|Groundhog Day|1993
         if (!line.matches(".*\\.*\\|.*\\|.*\\|.*\\|.*".toRegex())) {
-            Timber.i("Ignoring line that does not match import pattern, line=$line")
+            Log.i(TAG, "Ignoring line that does not match import pattern, line=$line")
         }
         val columns = line.split("\\|".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
-        val movie = Movie()
-        movie.container = get(columns, Columns.CONTAINER)
-        movie.index = get(columns, Columns.INDEX)
-        movie.imdbId = get(columns, Columns.IMDB_ID)
-        movie.type = get(columns, Columns.TYPE)
-        movie.name = get(columns, Columns.NAME)
-        movie.year = get(columns, Columns.YEAR)
+        val movie = Movie().apply {
+            container = get(columns, Columns.CONTAINER)
+            index = get(columns, Columns.INDEX)
+            imdbId = get(columns, Columns.IMDB_ID)
+            type = get(columns, Columns.TYPE)
+            name = get(columns, Columns.NAME)
+            year = get(columns, Columns.YEAR)
+        }
         return movie
     }
 

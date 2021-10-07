@@ -5,12 +5,10 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import se.hactar.movieregister.R
-import se.hactar.movieregister.helper.DebugLifecycleObserver
 import se.hactar.movieregister.repository.MovieRepository
 
 class MainActivity : AppCompatActivity() {
     public override fun onCreate(savedInstanceState: Bundle?) {
-        lifecycle.addObserver(DebugLifecycleObserver(this))
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
     }

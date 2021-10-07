@@ -2,13 +2,14 @@ package se.hactar.movieregister.ui
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import se.hactar.movieregister.repository.MovieRepository
-import timber.log.Timber
 
 class ImportActivity : AppCompatActivity() {
-
-    private val tag: String = ImportActivity::class.java.simpleName
+    companion object {
+        private val TAG = ImportActivity::class.java.simpleName
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -20,7 +21,7 @@ class ImportActivity : AppCompatActivity() {
             val uri = intent.data
             val name = uri?.lastPathSegment
 
-            Timber.v("$tag File intent detected: $action : ${intent.dataString} : ${intent.type} : $name")
+            Log.v(TAG, "File intent detected: $action : ${intent.dataString} : ${intent.type} : $name")
 
             val input = contentResolver.openInputStream(uri!!)
             MovieRepository.importMovies(input!!)

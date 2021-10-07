@@ -1,4 +1,4 @@
-package se.hactar.movieregister.helper.imdb.model
+package se.hactar.movieregister.api.imdb.model
 
 
 import com.google.gson.annotations.SerializedName

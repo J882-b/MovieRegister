@@ -4,8 +4,6 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-import se.hactar.movieregister.helper.imdb.ImdbHelper
-
 @Entity(tableName = "movie")
 class Movie {
 
@@ -33,9 +31,6 @@ class Movie {
 
     @ColumnInfo(name = "poster_url")
     var posterUrl: String? = null
-
-    val imdbUrl: String
-        get() = ImdbHelper.TITLE_URL + imdbId + "/"
 
     override fun toString(): String {
         return "Movie{" +

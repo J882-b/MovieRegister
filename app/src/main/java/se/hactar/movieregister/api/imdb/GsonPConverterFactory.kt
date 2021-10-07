@@ -1,4 +1,4 @@
-package se.hactar.movieregister.helper
+package se.hactar.movieregister.api.imdb
 
 
 import com.google.gson.Gson
