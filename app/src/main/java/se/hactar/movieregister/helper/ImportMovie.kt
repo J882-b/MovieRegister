@@ -10,7 +10,7 @@ object ImportMovie {
     // TODO: Move to Movie.from()
     fun parse(line: String): Movie {
         // Example: A|1|tt0107048|DVD|Groundhog Day|1993|
-        // Example: A|14|tt0487831|DVD|The IT Crowd|2007|Season 2
+        // Example: A|13|tt0080274|DVD|Shogun |1980|Disc 1
         if (!line.matches(".*\\|.*\\|.*\\|.*\\|.*\\|.*\\|.*".toRegex())) {
             Log.i(TAG, "Ignoring line that does not match import pattern, line=$line")
         }
