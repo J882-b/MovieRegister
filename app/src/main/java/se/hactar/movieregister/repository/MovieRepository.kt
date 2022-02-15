@@ -8,8 +8,8 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import se.hactar.movieregister.MovieApp
-import se.hactar.movieregister.helper.ImportMovie
 import se.hactar.movieregister.api.imdb.Imdb
+import se.hactar.movieregister.model.Movie
 import java.io.InputStream
 
 object MovieRepository {
@@ -27,7 +27,8 @@ object MovieRepository {
                     .lineSequence()
                     // TODO: Verify first line
                     .dropWhile { it == FIRST_LINE_PATTERN }
-                    .map { ImportMovie.parse(it) }
+                    .map { Movie.from(it) }
+                    .filterNotNull()
                     .onEach { Log.d(TAG, "Parsed movie: $it") }
                     .toList()
 
