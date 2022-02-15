@@ -70,6 +70,7 @@ class MovieViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
         }
 
         Log.d(TAG, "Fetching poster for ${movie.imdbId}")
+        // TODO: Create my own image loader.
         Glide.with(view.context).load(movie.posterUrl).into(image)
     }
 }
