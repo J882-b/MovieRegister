@@ -1,13 +1,20 @@
 package se.hactar.movieregister.ui
 
+import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import androidx.activity.result.contract.ActivityResultContracts.GetContent
 import androidx.appcompat.app.AppCompatActivity
 import se.hactar.movieregister.R
 import se.hactar.movieregister.repository.MovieRepository
 
 class MainActivity : AppCompatActivity() {
+    private val getContent = registerForActivityResult(GetContent()) { uri: Uri? ->
+        val input = contentResolver.openInputStream(uri!!)
+        MovieRepository.importMovies(input!!)
+    }
+
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -23,11 +30,16 @@ class MainActivity : AppCompatActivity() {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        val id = item.itemId
 
-        if (id == R.id.action_clear) {
-            MovieRepository.clearMovies()
-            return true
+        when (item.itemId) {
+            R.id.action_clear -> {
+                MovieRepository.clearMovies()
+                return true
+            }
+            R.id.action_open -> {
+                getContent.launch("*/*")
+                return true
+            }
         }
 
         return super.onOptionsItemSelected(item)

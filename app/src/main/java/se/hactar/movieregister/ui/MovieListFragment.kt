@@ -24,7 +24,7 @@ class MovieListFragment : Fragment() {
         recyclerView.layoutManager = LinearLayoutManager(activity)
         val model = ViewModelProvider(requireActivity()).get(MovieListViewModel::class.java)
         model.liveDataMovies().observe(viewLifecycleOwner, { adapter.addAll(it!!) })
-        return   view
+        return view
     }
 
     override fun onDestroyView() {

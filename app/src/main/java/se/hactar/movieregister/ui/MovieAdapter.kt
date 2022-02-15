@@ -60,7 +60,7 @@ class MovieViewHolder(private val view: View) : RecyclerView.ViewHolder(view) {
 
     fun bind(_movie: Movie) {
         movie = _movie
-        name.text = movie.name
+        name.text = "${movie.title} ${movie.indexTitle}"
         index.text = movie.index
         view.tag = this
         image.setImageResource(R.drawable.ic_menu_block)

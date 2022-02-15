@@ -20,27 +20,24 @@ class Movie {
     @ColumnInfo(name = "imdb_id")
     var imdbId: String? = null
 
-    @ColumnInfo(name = "first_name")
-    var type: String? = null
+    @ColumnInfo(name = "disc_type")
+    var discType: String? = null
 
-    @ColumnInfo(name = "type")
-    var name: String? = null
+    @ColumnInfo(name = "title")
+    var title: String? = null
 
     @ColumnInfo(name = "year")
     var year: String? = null
+
+    @ColumnInfo(name = "index_title")
+    var indexTitle: String? = null
 
     @ColumnInfo(name = "poster_url")
     var posterUrl: String? = null
 
     override fun toString(): String {
-        return "Movie{" +
-                "container='" + container + '\''.toString() +
-                ", index='" + index + '\''.toString() +
-                ", imdbId='" + imdbId + '\''.toString() +
-                ", type='" + type + '\''.toString() +
-                ", name='" + name + '\''.toString() +
-                ", year='" + year + '\''.toString() +
-                ", posterUrl='" + posterUrl + '\''.toString() +
-                '}'.toString()
+        return "Movie(id=$id, container=$container, index=$index, imdbId=$imdbId, " +
+                "discType=$discType, title=$title, year=$year, indexTitle=$indexTitle, " +
+                "posterUrl=$posterUrl)"
     }
 }
